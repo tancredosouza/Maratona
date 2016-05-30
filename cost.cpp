@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+#define rp(i,n) for(int i = 0; i < (int) n; i++)
+#define fr(i,a,b) for(int i = (int) a; i < b; i++)
+#define sc(a) scanf("%d", &a)
+#define sc2(a,b) scanf("%d%d", &a, &b)
+#define go(T) while(T--)
+
+using namespace std;
+int T,c;
+vector<int> val(3);
+int main() {
+	sc(T);
+	c = 1;
+	go(T) {
+		rp(i,3)
+			sc(val[i]);
+		
+		sort(val.begin(), val.end());
+		printf("Case %d: %d\n", c++, val[1]);
+	}
+	return 0;
+}
