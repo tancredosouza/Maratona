@@ -7,9 +7,11 @@ int main() {
 	int n, m;
 	int s, e, r;
 	bool CONFLICT;
-	while (scanf("%d%d", &n, &m) && (n || m)) {
+	while (scanf("%d %d", &n, &m) && (n || m)) {
 		calendar.set();
 		CONFLICT = false;
+
+		// scan single tasks
 		for (int c = 0; c < n; ++c) {
 			scanf("%d %d", &s, &e);
 
@@ -19,7 +21,6 @@ int main() {
 			
 			else {
 				calendar.set(s,0);
-				calendar.set(e,0);
 			}
 
 			for(int i = s + 1; i < e && !CONFLICT; ++i) {
@@ -30,11 +31,11 @@ int main() {
 			}
 		}
 
+		// scan repeated tasks
 		for (int c = 0; c < m; ++c) {
 			scanf("%d %d %d", &s, &e, &r);
-			while (s <= e && e <= 1000000){
+			while (s <= 1000000){
 				calendar.set(s,0);
-				calendar.set(e,0);
 				for(int i = s + 1; i < e && !CONFLICT; ++i) {
 					if (!calendar.test(i))
 						CONFLICT = true;
@@ -44,11 +45,10 @@ int main() {
 
 				if (CONFLICT)
 					break;
-				s += r;
-				e += r;
+				s = s + r;
+				e = max(1000000,e + r);
 			}
 		}
-
 
 		if(CONFLICT)
 			cout << "CONFLICT" << endl;
