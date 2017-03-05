@@ -1,68 +1,63 @@
 #include <bits/stdc++.h>
 
+#define ST_ID pos + 1
+
 using namespace std;
-int SET, N, S, Q;
+
+int SET, N, S, Q, Q_i, pos, time_, v;
 
 int main() {
 	scanf("%d", &SET);
 	while(SET--) {
-		scanf("%d %d %d", &N, &S, &Q);
-		vector<queue<int> > B(N+1);
-		stack<int> carrier;
-		bitset<200> stat;
+		std::stack<int> carrier;
+		cin >> N >> S >> Q;
+		std::vector<std::queue<int> > B(N);
+		pos = 0; time_ = 0;
 
-		stat.set();
-		for(int i = N; i < 200; i++)
-			stat.reset(i);
-		int id, Q_i;
-		for(int i = 1; i <= N; i++) {
-			scanf("%d", &Q_i);
-			for(int k = 0; k < Q_i; k++) {
-				scanf("%d", &id);
-				B[i].push(id);
+		//read input
+		for(int i = 0; i < N; i++) {
+			cin >> Q_i;
+			for(int j = 0; j < Q_i; j++) {
+				cin >> v;
+				B[i].push(v);
 			}
 		}
 
-		int pos = 1, t = 0;
-		while(1) {
-			//unload in carrier stk
-			while(!carrier.empty() && B[pos].size() < Q) {
-				if (carrier.top() != pos)
- 					B[pos].push(carrier.top());
+		//while there is stations to visit or the carrier has cargo
+		while (1) {
+			//unload
+			while(!carrier.empty() && (carrier.top() == ST_ID || B[pos].size() < Q)) {
+				if(carrier.top() != ST_ID)
+					B[pos].push(carrier.top());
 
- 				carrier.pop();
-				t = t + 1;
+				carrier.pop();
+				time_ += 1; //successful unload
 			}
 
-			//load carrier stk
-			while(carrier.size() < S && !B[pos].empty()) {
+			//load
+			while(!carrier.size() < S && !B[pos].empty()) {
 				carrier.push(B[pos].front());
 				B[pos].pop();
-				t = t + 1;
-			}
-			//check if station is clear
-			if(B[pos].empty())
-				stat.reset(pos - 1);
-			else
-				stat.set(pos - 1);
-
-			//move
-			if (carrier.empty() || stat.any()) {
-				t = t + 2;
-				pos = pos + 1;
+				time_ += 1; //successful load
 			}
 
-			else
+
+			//check for end
+			int c = 0;
+			for(int i = 0; i < N && carrier.empty(); i++) {
+				if(B[i].empty())
+					c++;
+			}
+
+			if(c == N)
 				break;
 
-			if(pos > N)
-				pos = 1;
-
-
+			//move
+			pos = (pos + 1)%N;
+			time_ += 2;
 		}
 
-
-		cout << t << endl;
+		std::cout << time_ << std::endl;
 	}
 	return 0;
 }
